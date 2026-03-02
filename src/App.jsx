@@ -115,7 +115,29 @@ function App() {
           <p>Hora de trocar de modo.</p>
           <button
             className="alerta-botao"
-            onClick={() => setMostrarAviso(false)}
+            onClick={() => {
+              // 1. A primeira coisa é esconder esse aviso da tela
+              setMostrarAviso(false);
+
+              // 2. Preparamos o relógio
+              const time = new Date();
+              let proximosMinutos;
+
+              // 3. A Lógica da troca: Se eu estava focando, agora vou descansar
+              if (modo === 'foco') {
+                setModo('descanso'); // Avisa o React para trocar a palavra na tela
+                proximosMinutos = tempoDescanso; // Pega o tempo de descanso que você digitou
+              }
+              // Se eu estava descansando, agora volto a focar
+              else {
+                setModo('foco');
+                proximosMinutos = tempoFoco;
+              }
+
+              // 4. Faz a matemática e manda o cronômetro rodar de novo!
+              time.setSeconds(time.getSeconds() + (proximosMinutos * 60));
+              restart(time);
+            }}
           >
             Beleza, entendi
           </button>
