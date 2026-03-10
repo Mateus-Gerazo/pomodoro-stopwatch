@@ -19,19 +19,14 @@ function App() {
   // 4. Controle do nosso Alerta Customizado (começa escondido)
   const [mostrarAviso, setMostrarAviso] = useState(false);
 
-  // 5. Controle do nosso Cronômetro (começa pausado)
-  //const [cronometroPausado, setCronometroPausado] = useState(true);
-
-  // 6. Nome da página mostrando o tempo restante
-  const [nomePagina, setNomePagina] = useState('Pomodoro');
-
   const {
     seconds,
     minutes,
     pause,
     resume,
-    restart
-  } = useTimer({ expiryTimestamp: time, onExpire: () => setMostrarAviso(true) });
+    restart,
+    isRunning
+  } = useTimer({ expiryTimestamp: time, autoStart: false, onExpire: () => setMostrarAviso(true) });
 
   // Formatação para colocar o zero na frente (05:00 em vez de 5:0)
   const minutosFormatados = String(minutes).padStart(2, '0');
@@ -100,8 +95,11 @@ function App() {
         </div>
 
         <div className="controls-container">
-          <button className="btn btn-secondary" onClick={pause}>Pausar</button>
-          <button className="btn btn-primary" onClick={resume}>Continuar</button>
+          {isRunning ? (
+            <button className="btn btn-secondary" onClick={pause}>Pausar</button>
+          ) : (
+            <button className="btn btn-primary" onClick={resume}>Continuar</button>
+          )}
 
           <button className="btn btn-danger" onClick={() => {
             const time = new Date();
@@ -117,7 +115,7 @@ function App() {
             // Multiplica os minutos escolhidos por 60 segundos
             time.setSeconds(time.getSeconds() + (minutos * 60));
 
-            restart(time);
+            restart(time, false);
           }}>
             Reiniciar
           </button>
@@ -165,5 +163,3 @@ function App() {
 }
 
 export default App;
-
-// Adicionar funionabilidades a mais nos botões e corrigir possíveis bugs
